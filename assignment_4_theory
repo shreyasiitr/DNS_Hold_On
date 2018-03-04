@@ -1,0 +1,29 @@
+1. How would you localize a partial proxy that operates only on Web connections?
+Answer: To localize the partial proxy, TTL value manipulation needs to be done. First ping the censored server to calculate the time to live (TTL). After this, send TCP SYN packets to the corresponding address with a lower value of TTL than that was calculated. If a response is received, then it can be summarised that the connection is being censored.
+
+2. How would you detect a flow terminating proxy? TODO
+Answer: There is a connection between the clients and the proxy as well as the proxy and the server. A secure TLS connection can be made through a website that does so in which case user will see an insecure HTTP connection. This is because such connection is made directly by the server and not the user.
+
+3. How would you detect a flow rewriting proxy?
+Answer: Flow rewriting proxies can be detected by making an HTTP request with the censorable data in the header or body of the packet. If there is any modification, then there is a flow rewriting proxy in the network.
+
+4. How can you detect on-path censors?
+Answer: If there is an on-path censor, then the client will receive two responses for the same request after a fixed amount of time, similar to the motivation behind DNS hold on.
+
+5. What can servers do to resist censorship? 
+Answer: The data can be encrypted and stored on multiple servers and each server has its own private key. Because servers will not store the entire key for a particular data, and all the data is encrypted, then server deniability, which is the ability for a server to deny knowledge of the hosted documents’ contents, is achieved in this case. A subset of these servers can return the requested data and their key shares, which can be used to form the decrypting key. This is censorship resistant because all the servers do not know about the entire data that is being stored.
+Another way to provide censorship resistance is by entangling documents such that the removal of one document will result in the removal of other documents. A threshold number of entangled blocks, which represent the distributed data, can be used to reconstruct the original data.
+
+6. How can you determine if a particular filtering product is being used for censorship?
+Answer : Such filtering products are sometimes visible on the Internet and hence an external scan of the IP address space will be able to locate them. By using search engine such as Shodan, which indexes the IP addresses of externally visible devices on the Internet, some commonly appearing keywords related to the product that is being tested for can be identified. Then, by using a profiling tool it can be verified if a product is installed on a host or not. There might be cases when the vendor removes the header due to which a different confirmation method will have to be used. First, a set of sites that are not blocked is obtained and then a few of them are given to the URL filter vendor. If after a few days these sites are blocked, then most probably the URL filter under consideration is being used for censorship, and the submission of the sites triggered the blocking.
+
+7. You are browsing the web and a site doesn't work. You suspect that this site is being censored in your country. What are strategies you can use to confirm this? How would you differentiate censorship from glitches?
+Answer: The best way to check for censorship is by using VPN. If by using VPN the site is accessible, then it is being censored. There are a lot of VPN services available these days that allow users to specify the country the data should be routed from. Another option is to check whether the DNS queries are being censored or not using the same methods as used in DNS hold on. Glitches are infrequent and hence like a Heisenbug are non deterministic i.e. they may or may not arise again. Compared to them, censorship is deterministic and accessing the censored sites after frequent intervals will not change the result and they will still remain censored.
+
+8. Your country decides to block all encrypted traffic. What is a strategy you could use to send a secret message to someone else? How would you make this method scalable? (No single correct answer) 
+Answer: One way is to physically meet the person and exchange the encryption key. Afterwards, exchange information via email by encrypting using the key that was previously exchanged.
+Another more scalable way is to use Tor, that enables anonymous communication, to send the data. By keeping some of the entry relays secret, users can evade Internet censorship that relies upon blocking public Tor relays.
+
+
+9. What methods would non-net neutral ISPs likely use to prioritize traffic? What experiments could you do to detect these methods? (No single correct answer)
+Answer: Such ISP's can have prior dealings with content providers so as to make separate 'lanes' of internet traffic - Any paid customers will be put in the faster lanes and the rest will have to deal with slow speed internet in the slow lanes. A very easy way to check such prioritization is to calculate the RTT corresponding to a website through the major ISP's of the region. If there is a drastic difference in the calculated values, then there is prioritization of traffic.
